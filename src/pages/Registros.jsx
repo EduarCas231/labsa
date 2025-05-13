@@ -45,7 +45,7 @@ const Registros = () => {
 
     try {
       // Envía los datos a la API
-      const response = await fetch('https://3.12.74.141/visitas', {
+      const response = await fetch('https://18.226.185.47/visitas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
