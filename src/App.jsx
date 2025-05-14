@@ -3,7 +3,9 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import Visitas from './pages/Visitas';
 import Escaner from './pages/Escaner';
-import Registro from './pages/Registros'
+import Registro from './pages/Registros';
+import Editar from './pages/Editar';
+import Detalles from './pages/Detalles';
 
 // Componente Navbar
 const Navbar = () => {
@@ -142,6 +144,8 @@ function App() {
         <Route path="/Visitas" element={<Visitas />} />
         <Route path="/Escaner" element={<Escaner />} />
         <Route path="/Registro" element={<Registro />} /> 
+        <Route path="/editar/:id" element={<Editar />} />
+        <Route path="/detalles/:id" element={<Detalles />} />
       </Routes>
     </Router>
   );

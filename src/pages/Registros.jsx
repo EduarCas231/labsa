@@ -1,24 +1,24 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import './reg.css';
+import './Registros.css';
 
 const Registros = () => {
   const navigate = useNavigate();
 
-  // Estado para almacenar los datos del formulario
   const [formData, setFormData] = useState({
     nombre: '',
     apellidoPaterno: '',
     apellidoMaterno: '',
-    lugar: 'LABSA S.A. DE C.V.', // Valor fijo para el lugar
+    lugar: 'LABSA S.A. DE C.V.',
     hora: '',
     dia: '',
     departamento: '',
     detalle: '',
   });
 
-  // Opciones para el campo "departamento"
+  const [qrData, setQrData] = useState(null);
+
   const departamentos = [
     'Dirección',
     'Tisc',
@@ -30,7 +30,6 @@ const Registros = () => {
     'Cromatografía',
   ];
 
-  // Maneja los cambios en los campos del formulario
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -39,37 +38,35 @@ const Registros = () => {
     });
   };
 
-  // Maneja el envío del formulario
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Evita que el formulario se envíe automáticamente
+    e.preventDefault();
 
     try {
-      // Envía los datos a la API
       const response = await fetch('https://18.226.185.47/visitas', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(formData),
-        mode: 'cors', // Asegurar que se permite desde otros orígenes
-        credentials: 'same-origin' // Si la API necesita autenticación
-      }).catch(error => console.error("Error en la petición:", error));
-      
-
-      // Si la visita se registra correctamente, muestra la alerta de SweetAlert2
-      Swal.fire({
-        title: 'Visita Registrada',
-        icon: 'success',
-        confirmButtonText: 'Aceptar',
-      }).then((result) => {
-        
-        if (result.isConfirmed) {
-          navigate('/Visitas');
-        }
+        mode: 'cors',
+        credentials: 'same-origin',
       });
+
+      if (response && response.ok) {
+        const data = await response.json();
+        setQrData(data.qr_base64);
+
+        Swal.fire({
+          title: 'Visita Registrada',
+          text: 'Se generó un código QR con los datos.',
+          icon: 'success',
+          confirmButtonText: 'Ver QR',
+        });
+      } else {
+        throw new Error('Error al registrar');
+      }
     } catch (error) {
       console.error('Error:', error);
-      // Muestra una alerta de error si algo sale mal
       Swal.fire({
         title: 'Error!',
         text: 'Hubo un error al registrar la visita. Por favor, intenta de nuevo.',
@@ -79,10 +76,14 @@ const Registros = () => {
     }
   };
 
+  const handleRegresar = () => {
+    navigate('/visitas');
+  };
+
   return (
-    <div className="registro-container">
+    <div className="visita-form-container">
       <h1>Registrar Nueva Visita</h1>
-      <form onSubmit={handleSubmit} className="registro-form">
+      <form onSubmit={handleSubmit} className="visita-form">
         <div className="form-group">
           <label>Nombre:</label>
           <input
@@ -122,7 +123,7 @@ const Registros = () => {
             name="lugar"
             value={formData.lugar}
             onChange={handleChange}
-            readOnly // Hace que el campo sea de solo lectura
+            readOnly
           />
         </div>
 
@@ -178,6 +179,17 @@ const Registros = () => {
           Registrar Visita
         </button>
       </form>
+
+      {qrData && (
+        <div className="qr-container">
+          <h2>Código QR de la Visita</h2>
+          <img src={`data:image/png;base64,${qrData}`} alt="Código QR" />
+        </div>
+      )}
+
+      <button onClick={handleRegresar} className="regresar-button">
+        Regresar a Visitas
+      </button>
     </div>
   );
 };

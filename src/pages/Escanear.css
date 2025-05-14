@@ -1,0 +1,197 @@
+.scanner-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 1rem;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  .scanner-header {
+    text-align: center;
+    margin-bottom: 1.5rem;
+  }
+  
+  .scanner-header h1 {
+    color: #2d3748;
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+  }
+  
+  .scanner-header p {
+    color: #4a5568;
+    font-size: 0.9rem;
+  }
+  
+  .qr-reader-container {
+    position: relative;
+    margin-bottom: 1.5rem;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  
+  .scanner-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.4);
+    pointer-events: none;
+  }
+  
+  .scanner-frame {
+    width: 70%;
+    height: 70%;
+    border: 3px solid #4f46e5;
+    border-radius: 0.5rem;
+    position: relative;
+  }
+  
+  .scanner-icon {
+    font-size: 1.5rem;
+    color: white;
+    margin: 0.5rem 0;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .scanner-overlay p {
+    color: white;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  }
+  
+  .scan-result-preview {
+    text-align: center;
+    padding: 1rem;
+    background-color: #f0fdf4;
+    border-radius: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .success-icon {
+    font-size: 2rem;
+    color: #10b981;
+    margin-bottom: 0.5rem;
+  }
+  
+  .manual-entry {
+    background-color: #f8fafc;
+    padding: 1rem;
+    border-radius: 0.5rem;
+  }
+  
+  .manual-entry h3 {
+    color: #4b5563;
+    font-size: 0.9rem;
+    text-align: center;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input-with-icon {
+    position: relative;
+    margin-bottom: 0.5rem;
+  }
+  
+  .input-icon {
+    position: absolute;
+    left: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #9ca3af;
+  }
+  
+  .input-with-icon input {
+    width: 100%;
+    padding: 0.5rem 0.5rem 0.5rem 2rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+  }
+  
+  .btn-primary {
+    background-color: #4f46e5;
+    color: white;
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    width: 100%;
+  }
+  
+  .btn-primary:hover {
+    background-color: #4338ca;
+  }
+  
+  .btn-secondary {
+    background-color: white;
+    color: #4f46e5;
+    padding: 0.5rem 1rem;
+    border: 1px solid #4f46e5;
+    border-radius: 0.25rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  
+  .btn-secondary:hover {
+    background-color: #4f46e5;
+    color: white;
+  }
+  
+  .scanner-footer {
+    text-align: center;
+    margin-top: 1rem;
+    color: #6b7280;
+    font-size: 0.8rem;
+  }
+  
+  /* Estilos para SweetAlert */
+  .swal-confirm {
+    background-color: #4f46e5 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.25rem !important;
+    font-size: 0.8rem !important;
+  }
+  
+  .swal-cancel {
+    background-color: #ef4444 !important;
+    padding: 0.5rem 1rem !important;
+    border-radius: 0.25rem !important;
+    font-size: 0.8rem !important;
+    margin-left: 0.5rem !important;
+  }
+  
+  .scan-result {
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  
+  .scan-result p {
+    margin: 0.25rem 0;
+  }
+  
+  .scan-actions {
+    display: flex;
+    justify-content: center;
+    margin-top: 0.5rem;
+    gap: 0.5rem;
+  }
+  
+  @media (min-width: 768px) {
+    .scanner-header h1 {
+      font-size: 1.75rem;
+    }
+    
+    .scanner-header p {
+      font-size: 1rem;
+    }
+    
+    .manual-entry h3 {
+      font-size: 1rem;
+    }
+  }
