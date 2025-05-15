@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './Registros.css';
 import Swal from 'sweetalert2';
+import { FiSave, FiX, FiClock, FiCalendar, FiUser, FiHome, FiBriefcase, FiFileText } from 'react-icons/fi';
+import './Editar.css';
 
 const Editar = () => {
   const { id } = useParams();
@@ -32,6 +33,12 @@ const Editar = () => {
       } catch (error) {
         setError(error.message);
         setLoading(false);
+        Swal.fire({
+          title: 'Error',
+          text: error.message,
+          icon: 'error',
+          confirmButtonColor: '#2b91e7'
+        });
       }
     };
 
@@ -60,119 +67,194 @@ const Editar = () => {
         throw new Error('Error al actualizar la visita');
       }
 
-      Swal.fire({
-        title: 'Éxito',
+      await Swal.fire({
+        title: '¡Éxito!',
         text: 'Visita actualizada correctamente',
         icon: 'success',
-        confirmButtonText: 'Aceptar'
-      }).then(() => {
-        navigate('/visitas');
+        confirmButtonColor: '#2b91e7',
+        timer: 1500,
+        showConfirmButton: false
       });
+      navigate('/visitas');
     } catch (error) {
-      setError(error.message);
       Swal.fire({
         title: 'Error',
         text: error.message,
         icon: 'error',
-        confirmButtonText: 'Aceptar'
+        confirmButtonColor: '#2b91e7'
       });
     }
   };
 
-  if (loading) return <p className="loading-message">Cargando...</p>;
-  if (error) return <p className="error-message">{error}</p>;
+  if (loading) return (
+    <div className="loading-container">
+      <div className="loading-spinner"></div>
+      <p>Cargando información de la visita...</p>
+    </div>
+  );
+
+  if (error) return (
+    <div className="error-container">
+      <div className="error-card">
+        <h2>Error</h2>
+        <p>{error}</p>
+        <button 
+          className="retry-btn" 
+          onClick={() => window.location.reload()}
+        >
+          Reintentar
+        </button>
+      </div>
+    </div>
+  );
 
   return (
-    <div className="visita-form-container">
-      <h2>Editar Visita</h2>
-      <form onSubmit={handleSubmit} className="visita-form">
-        <div className="form-group">
-          <label>Nombre:</label>
-          <input
-            type="text"
-            name="nombre"
-            value={visita.nombre}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Apellido Paterno:</label>
-          <input
-            type="text"
-            name="apellidoPaterno"
-            value={visita.apellidoPaterno}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Apellido Materno:</label>
-          <input
-            type="text"
-            name="apellidoMaterno"
-            value={visita.apellidoMaterno}
-            onChange={handleInputChange}
-          />
-        </div>
-        <div className="form-group">
-          <label>Lugar:</label>
-          <input
-            type="text"
-            name="lugar"
-            value={visita.lugar}
-            onChange={handleInputChange}
-            readOnly
-          />
-        </div>
-        <div className="form-group">
-          <label>Hora:</label>
-          <input
-            type="time"
-            name="hora"
-            value={visita.hora}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Día:</label>
-          <input
-            type="date"
-            name="dia"
-            value={visita.dia}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Departamento:</label>
-          <input
-            type="text"
-            name="departamento"
-            value={visita.departamento}
-            onChange={handleInputChange}
-            required
-          />
-        </div>
-        <div className="form-group">
-          <label>Detalle:</label>
-          <textarea
-            name="detalle"
-            value={visita.detalle}
-            onChange={handleInputChange}
-          />
+    <div className="edit-container">
+      <div className="edit-header">
+        <h1>Editar Visita</h1>
+        <p>Modifica los detalles de la visita registrada</p>
+      </div>
+
+      <form onSubmit={handleSubmit} className="edit-form">
+        <div className="form-grid">
+          {/* Nombre */}
+          <div className="form-group">
+            <label className="form-label">
+              <FiUser className="input-icon" />
+              <span>Nombre</span>
+            </label>
+            <input
+              type="text"
+              name="nombre"
+              value={visita.nombre}
+              onChange={handleInputChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          {/* Apellido Paterno */}
+          <div className="form-group">
+            <label className="form-label">
+              <FiUser className="input-icon" />
+              <span>Apellido Paterno</span>
+            </label>
+            <input
+              type="text"
+              name="apellidoPaterno"
+              value={visita.apellidoPaterno}
+              onChange={handleInputChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          {/* Apellido Materno */}
+          <div className="form-group">
+            <label className="form-label">
+              <FiUser className="input-icon" />
+              <span>Apellido Materno</span>
+            </label>
+            <input
+              type="text"
+              name="apellidoMaterno"
+              value={visita.apellidoMaterno}
+              onChange={handleInputChange}
+              className="form-input"
+            />
+          </div>
+
+          {/* Lugar (readonly) */}
+          <div className="form-group">
+            <label className="form-label">
+              <FiHome className="input-icon" />
+              <span>Lugar</span>
+            </label>
+            <input
+              type="text"
+              name="lugar"
+              value={visita.lugar}
+              onChange={handleInputChange}
+              className="form-input readonly"
+              readOnly
+            />
+          </div>
+
+          {/* Hora */}
+          <div className="form-group">
+            <label className="form-label">
+              <FiClock className="input-icon" />
+              <span>Hora</span>
+            </label>
+            <input
+              type="time"
+              name="hora"
+              value={visita.hora}
+              onChange={handleInputChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          {/* Fecha */}
+          <div className="form-group">
+            <label className="form-label">
+              <FiCalendar className="input-icon" />
+              <span>Fecha</span>
+            </label>
+            <input
+              type="date"
+              name="dia"
+              value={visita.dia}
+              onChange={handleInputChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          {/* Departamento */}
+          <div className="form-group">
+            <label className="form-label">
+              <FiBriefcase className="input-icon" />
+              <span>Departamento</span>
+            </label>
+            <input
+              type="text"
+              name="departamento"
+              value={visita.departamento}
+              onChange={handleInputChange}
+              className="form-input"
+              required
+            />
+          </div>
+
+          {/* Detalle */}
+          <div className="form-group full-width">
+            <label className="form-label">
+              <FiFileText className="input-icon" />
+              <span>Detalles adicionales</span>
+            </label>
+            <textarea
+              name="detalle"
+              value={visita.detalle}
+              onChange={handleInputChange}
+              className="form-textarea"
+              rows="4"
+            />
+          </div>
         </div>
 
         <div className="form-actions">
-          <button type="submit" className="save-button">
+          <button type="submit" className="submit-btn">
+            <FiSave className="btn-icon" />
             Guardar cambios
           </button>
           <button 
             type="button" 
-            className="cancel-button"
+            className="cancel-btn"
             onClick={() => navigate('/visitas')}
           >
+            <FiX className="btn-icon" />
             Cancelar
           </button>
         </div>

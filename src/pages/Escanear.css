@@ -1,197 +1,199 @@
+/* Variables de color */
+:root {
+  --primary-color: #2b91e7;
+  --primary-hover: #1a7fd4;
+  --success-color: #28a745;
+  --danger-color: #dc3545;
+  --text-color: #333;
+  --text-light: #6c757d;
+  --border-color: #dee2e6;
+  --bg-color: #f8f9fa;
+  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Estilos generales */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+}
+
 .scanner-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 1rem;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 0 1rem;
+}
+
+.scanner-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.scanner-header h1 {
+  font-size: 2rem;
+  color: var(--text-color);
+  margin-bottom: 0.5rem;
+}
+
+.scanner-header p {
+  color: var(--text-light);
+  font-size: 1rem;
+}
+
+/* Contenedor del escáner */
+.scanner-content {
+  background-color: white;
+  border-radius: 0.75rem;
+  padding: 2rem;
+  box-shadow: var(--card-shadow);
+}
+
+.qr-reader-container {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.qr-reader-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+}
+
+.scan-frame {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 70%;
+  height: 70%;
+  border: 3px solid var(--primary-color);
+  border-radius: 0.5rem;
+  pointer-events: none;
+  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
+}
+
+/* Entrada manual */
+.manual-entry {
+  text-align: center;
+  margin-top: 2rem;
+}
+
+.manual-entry-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+}
+
+.manual-entry h3 {
+  font-size: 1.25rem;
+  color: var(--text-color);
+  margin-left: 0.5rem;
+}
+
+.input-icon {
+  color: var(--primary-color);
+  font-size: 1.25rem;
+}
+
+.manual-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.manual-input {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--border-color);
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.manual-input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(43, 145, 231, 0.2);
+}
+
+/* Resultado exitoso */
+.scan-success {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+}
+
+.success-icon {
+  color: var(--success-color);
+  margin-bottom: 1rem;
+}
+
+.scan-success h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1.5rem;
+  color: var(--text-color);
+}
+
+/* Botones */
+.btn-primary {
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-hover);
+  transform: translateY(-2px);
+}
+
+.btn-icon {
+  margin-right: 0.5rem;
+}
+
+/* Estilos para el modal de verificación */
+.verification-result {
+  text-align: left;
+  padding: 0.5rem;
+}
+
+.detail-row {
+  margin: 0.75rem 0;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #eee;
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .scanner-container {
+    padding: 0 1rem;
   }
   
-  .scanner-header {
-    text-align: center;
-    margin-bottom: 1.5rem;
+  .qr-reader-wrapper {
+    max-width: 100%;
   }
   
-  .scanner-header h1 {
-    color: #2d3748;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-  }
-  
-  .scanner-header p {
-    color: #4a5568;
-    font-size: 0.9rem;
-  }
-  
-  .qr-reader-container {
-    position: relative;
-    margin-bottom: 1.5rem;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  }
-  
-  .scanner-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
+  .manual-form {
     width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(0, 0, 0, 0.4);
-    pointer-events: none;
   }
-  
-  .scanner-frame {
-    width: 70%;
-    height: 70%;
-    border: 3px solid #4f46e5;
-    border-radius: 0.5rem;
-    position: relative;
-  }
-  
-  .scanner-icon {
-    font-size: 1.5rem;
-    color: white;
-    margin: 0.5rem 0;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-  
-  .scanner-overlay p {
-    color: white;
-    font-size: 0.9rem;
-    font-weight: 500;
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  }
-  
-  .scan-result-preview {
-    text-align: center;
-    padding: 1rem;
-    background-color: #f0fdf4;
-    border-radius: 0.5rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .success-icon {
-    font-size: 2rem;
-    color: #10b981;
-    margin-bottom: 0.5rem;
-  }
-  
-  .manual-entry {
-    background-color: #f8fafc;
-    padding: 1rem;
-    border-radius: 0.5rem;
-  }
-  
-  .manual-entry h3 {
-    color: #4b5563;
-    font-size: 0.9rem;
-    text-align: center;
-    margin-bottom: 0.5rem;
-  }
-  
-  .input-with-icon {
-    position: relative;
-    margin-bottom: 0.5rem;
-  }
-  
-  .input-icon {
-    position: absolute;
-    left: 0.5rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #9ca3af;
-  }
-  
-  .input-with-icon input {
-    width: 100%;
-    padding: 0.5rem 0.5rem 0.5rem 2rem;
-    border: 1px solid #e2e8f0;
-    border-radius: 0.25rem;
-    font-size: 0.9rem;
-  }
-  
-  .btn-primary {
-    background-color: #4f46e5;
-    color: white;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 0.25rem;
-    font-size: 0.9rem;
-    cursor: pointer;
-    width: 100%;
-  }
-  
-  .btn-primary:hover {
-    background-color: #4338ca;
-  }
-  
-  .btn-secondary {
-    background-color: white;
-    color: #4f46e5;
-    padding: 0.5rem 1rem;
-    border: 1px solid #4f46e5;
-    border-radius: 0.25rem;
-    font-size: 0.9rem;
-    cursor: pointer;
-  }
-  
-  .btn-secondary:hover {
-    background-color: #4f46e5;
-    color: white;
-  }
-  
-  .scanner-footer {
-    text-align: center;
-    margin-top: 1rem;
-    color: #6b7280;
-    font-size: 0.8rem;
-  }
-  
-  /* Estilos para SweetAlert */
-  .swal-confirm {
-    background-color: #4f46e5 !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 0.25rem !important;
-    font-size: 0.8rem !important;
-  }
-  
-  .swal-cancel {
-    background-color: #ef4444 !important;
-    padding: 0.5rem 1rem !important;
-    border-radius: 0.25rem !important;
-    font-size: 0.8rem !important;
-    margin-left: 0.5rem !important;
-  }
-  
-  .scan-result {
-    text-align: left;
-    font-size: 0.9rem;
-  }
-  
-  .scan-result p {
-    margin: 0.25rem 0;
-  }
-  
-  .scan-actions {
-    display: flex;
-    justify-content: center;
-    margin-top: 0.5rem;
-    gap: 0.5rem;
-  }
-  
-  @media (min-width: 768px) {
-    .scanner-header h1 {
-      font-size: 1.75rem;
-    }
-    
-    .scanner-header p {
-      font-size: 1rem;
-    }
-    
-    .manual-entry h3 {
-      font-size: 1rem;
-    }
-  }
+}

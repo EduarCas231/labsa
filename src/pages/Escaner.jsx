@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { QrReader } from 'react-qr-reader'; // Importación corregida
+import QrScanner from 'react-qr-scanner';
 import Swal from 'sweetalert2';
-import { FiCamera, FiCheckCircle, FiSearch } from 'react-icons/fi';
+import { FiCamera, FiCheckCircle, FiKey } from 'react-icons/fi';
 import './Escanear.css';
 
 function Escaner() {
@@ -10,151 +10,146 @@ function Escaner() {
   const [scanning, setScanning] = useState(true);
   const [manualCode, setManualCode] = useState('');
 
-  const verificarVisita = async (idVisita) => {
+  const verificarVisita = async (codigo) => {
+    console.log('[DEBUG] Verificando código:', codigo);
+
     try {
-      const response = await fetch(`https://18.226.185.47/visitas/${idVisita}`);
-      
+      const cleanCode = codigo.trim();
+      const apiUrl = `https://18.226.185.47/visitas/codigo/${encodeURIComponent(cleanCode)}`;
+
+      const response = await fetch(apiUrl, {
+        method: 'GET',
+        headers: {
+          'Accept': 'application/json',
+          'Cache-Control': 'no-cache'
+        }
+      });
+
       if (!response.ok) {
-        throw new Error('Visita no encontrada');
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Visita no encontrada');
       }
-      
-      return await response.json();
+
+      const visita = await response.json();
+      return visita;
     } catch (error) {
-      console.error('Error al verificar visita:', error);
       throw error;
     }
   };
 
-  const handleScan = async (data) => {
-    if (!data) return;
-    
-    try {
-      const idVisita = data.match(/\d+/)?.[0];
-      if (!idVisita) throw new Error('Formato de código QR inválido');
+  const handleScan = async (codigo) => {
+    if (!codigo) return;
 
-      const visita = await verificarVisita(idVisita);
-      
+    setScanning(false);
+
+    try {
+      const visita = await verificarVisita(codigo);
+
       Swal.fire({
-        title: 'Visita encontrada',
+        title: 'VISITA VERIFICADA',
         html: `
-          <div class="scan-result">
-            <p><strong>Visitante:</strong> ${visita.nombre} ${visita.apellidoPaterno || ''}</p>
-            <p><strong>Departamento:</strong> ${visita.departamento}</p>
-            <p><strong>Fecha:</strong> ${new Date(visita.dia).toLocaleDateString('es-MX')}</p>
-            <div class="scan-actions">
-              <button class="swal-confirm" id="view-details">Ver detalles</button>
-              <button class="swal-cancel" id="new-scan">Nuevo escaneo</button>
-            </div>
+          <div class="verification-result">
+            <h4>${visita.nombre} ${visita.apellidoPaterno}</h4>
+            <div class="detail-row"><strong>Departamento:</strong> ${visita.departamento}</div>
+            <div class="detail-row"><strong>Fecha:</strong> ${visita.dia}</div>
+            <div class="detail-row"><strong>Hora:</strong> ${visita.hora?.substring(0, 5)}</div>
+            ${visita.detalle ? `<div class="detail-row"><strong>Detalle:</strong> ${visita.detalle}</div>` : ''}
           </div>
         `,
-        showConfirmButton: false,
-        didOpen: () => {
-          document.getElementById('view-details')?.addEventListener('click', () => {
-            navigate(`/detalles/${visita.id}`);
-          });
-          
-          document.getElementById('new-scan')?.addEventListener('click', () => {
-            setScanning(true);
-            Swal.close();
-          });
-        }
+        icon: 'success',
+        confirmButtonColor: '#2b91e7',
+        confirmButtonText: 'Aceptar'
       });
-      
-      setScanning(false);
     } catch (error) {
       Swal.fire({
-        title: 'Error',
-        text: error.message || 'No se encontró esta visita en el sistema',
+        title: 'Código no válido',
+        text: error.message,
         icon: 'error',
-        confirmButtonColor: '#4f46e5'
+        confirmButtonColor: '#2b91e7',
+        confirmButtonText: 'Reintentar'
+      }).then(() => {
+        setScanning(true);
       });
     }
-  };
-
-  const handleError = (err) => {
-    console.error(err);
-    Swal.fire({
-      title: 'Error de cámara',
-      text: 'No se pudo acceder a la cámara. Verifica los permisos o ingresa el código manualmente.',
-      icon: 'error',
-      confirmButtonColor: '#4f46e5'
-    });
   };
 
   const handleManualSubmit = async (e) => {
     e.preventDefault();
-    if (manualCode.trim()) {
-      await handleScan(manualCode);
+    if (!manualCode.trim()) {
+      Swal.fire({
+        title: 'Advertencia', 
+        text: 'Ingresa un código válido',
+        icon: 'warning',
+        confirmButtonColor: '#2b91e7'
+      });
+      return;
     }
+
+    await handleScan(manualCode);
+  };
+
+  const toggleCamera = () => {
+    setScanning(!scanning);
+    setManualCode('');
   };
 
   return (
     <div className="scanner-container">
       <div className="scanner-header">
-        <h1>Escanear código de visita</h1>
-        <p>Escanea el código QR del visitante para verificar su registro</p>
+        <h1>Escanear Visita</h1>
+        <p>Escanea el código QR o ingresa manualmente el código</p>
       </div>
 
-      <div className="scanner-section">
+      <div className="scanner-content">
         {scanning ? (
-          <div className="qr-reader-container">
-            <QrReader
-              scanDelay={300}
-              onResult={(result) => result && handleScan(result?.text)}
-              onError={handleError}
-              constraints={{ 
-                facingMode: 'environment',
-                audio: false,
-                video: {
-                  width: { ideal: 1280 },
-                  height: { ideal: 720 }
-                }
-              }}
-              containerStyle={{ width: '100%' }}
-            />
-            <div className="scanner-overlay">
-              <div className="scanner-frame"></div>
-              <FiCamera className="scanner-icon" />
-              <p>Enfoca el código QR dentro del marco</p>
+          <>
+            <div className="qr-reader-container">
+              <div className="qr-reader-wrapper">
+                <QrScanner
+                  delay={500}
+                  onError={(err) => console.error('[QR Error]', err)}
+                  onScan={(result) => {
+                    if (result) {
+                      handleScan(result.text || result);
+                    }
+                  }}
+                  style={{ width: '100%' }}
+                />
+                <div className="scan-frame"></div>
+              </div>
             </div>
-          </div>
+
+            <div className="manual-entry">
+              <div className="manual-entry-header">
+                <FiKey className="input-icon" />
+                <h3>Ingreso manual</h3>
+              </div>
+              <form onSubmit={handleManualSubmit} className="manual-form">
+                <input
+                  type="text"
+                  value={manualCode}
+                  onChange={(e) => setManualCode(e.target.value)}
+                  placeholder="Ej: abc123xyz"
+                  autoComplete="off"
+                  className="manual-input"
+                />
+                <button type="submit" className="btn-primary">
+                  Verificar código
+                </button>
+              </form>
+            </div>
+          </>
         ) : (
-          <div className="scan-result-preview">
-            <FiCheckCircle className="success-icon" />
-            <p>Escaneo completado</p>
-            <button 
-              className="btn-secondary"
-              onClick={() => setScanning(true)}
-            >
-              Escanear otro código
+          <div className="scan-success">
+            <div className="success-icon">
+              <FiCheckCircle size={64} />
+            </div>
+            <h3>Verificación completada</h3>
+            <button className="btn-primary" onClick={toggleCamera}>
+              <FiCamera className="btn-icon" /> Escanear otro código
             </button>
           </div>
         )}
-
-        <div className="manual-entry">
-          <h3>O ingresa el ID manualmente</h3>
-          <form onSubmit={handleManualSubmit}>
-            <div className="input-with-icon">
-              <FiSearch className="input-icon" />
-              <input
-                type="text"
-                value={manualCode}
-                onChange={(e) => setManualCode(e.target.value)}
-                placeholder="Ingresa el ID de visita"
-                required
-                pattern="\d+"
-                title="Por favor ingresa solo números (ID de visita)"
-              />
-            </div>
-            <button type="submit" className="btn-primary">
-              Verificar
-            </button>
-          </form>
-        </div>
-      </div>
-
-      <div className="scanner-footer">
-        <p>Sistema de gestión de visitas - LABSA</p>
       </div>
     </div>
   );
