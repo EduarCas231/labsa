@@ -1,66 +1,46 @@
-/* Variables de color */
-:root {
-  --primary-color: #2b91e7;
-  --primary-hover: #1a7fd4;
-  --success-color: #28a745;
-  --danger-color: #dc3545;
-  --text-color: #333;
-  --text-light: #6c757d;
-  --border-color: #dee2e6;
-  --bg-color: #f8f9fa;
-  --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-/* Estilos generales */
-body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background-color: var(--bg-color);
-  color: var(--text-color);
-}
-
 .scanner-container {
-  max-width: 800px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto;
 }
 
 .scanner-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .scanner-header h1 {
-  font-size: 2rem;
-  color: var(--text-color);
-  margin-bottom: 0.5rem;
+  color: #2b91e7;
+  margin-bottom: 10px;
 }
 
 .scanner-header p {
-  color: var(--text-light);
-  font-size: 1rem;
+  color: #666;
 }
 
-/* Contenedor del escáner */
 .scanner-content {
-  background-color: white;
-  border-radius: 0.75rem;
-  padding: 2rem;
-  box-shadow: var(--card-shadow);
+  width: 100%;
+  max-width: 500px;
 }
 
 .qr-reader-container {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 2rem;
+  width: 100%;
+  margin-bottom: 20px;
+  position: relative;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .qr-reader-wrapper {
   position: relative;
   width: 100%;
-  max-width: 500px;
-  border-radius: 0.5rem;
-  overflow: hidden;
-  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  height: 300px;
+  background-color: #000;
 }
 
 .scan-frame {
@@ -70,141 +50,17 @@ body {
   transform: translate(-50%, -50%);
   width: 70%;
   height: 70%;
-  border: 3px solid var(--primary-color);
-  border-radius: 0.5rem;
+  border: 3px solid #2b91e7;
+  border-radius: 8px;
+  z-index: 1;
   pointer-events: none;
-  box-shadow: 0 0 0 100vmax rgba(0, 0, 0, 0.5);
 }
-
-/* Entrada manual */
-.manual-entry {
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.manual-entry-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 1rem;
-}
-
-.manual-entry h3 {
-  font-size: 1.25rem;
-  color: var(--text-color);
-  margin-left: 0.5rem;
-}
-
-.input-icon {
-  color: var(--primary-color);
-  font-size: 1.25rem;
-}
-
-.manual-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.manual-input {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--border-color);
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  text-align: center;
-}
-
-.manual-input:focus {
-  outline: none;
-  border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(43, 145, 231, 0.2);
-}
-
-/* Resultado exitoso */
-.scan-success {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  padding: 2rem;
-}
-
-.success-icon {
-  color: var(--success-color);
-  margin-bottom: 1rem;
-}
-
-.scan-success h3 {
-  font-size: 1.5rem;
-  margin-bottom: 1.5rem;
-  color: var(--text-color);
-}
-
-/* Botones */
-.btn-primary {
-  background-color: var(--primary-color);
-  color: white;
-  border: none;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-  font-weight: 500;
-  cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-}
-
-.btn-primary:hover {
-  background-color: var(--primary-hover);
-  transform: translateY(-2px);
-}
-
-.btn-icon {
-  margin-right: 0.5rem;
-}
-
-/* Estilos para el modal de verificación */
-.verification-result {
-  text-align: left;
-  padding: 0.5rem;
-}
-
-.detail-row {
-  margin: 0.75rem 0;
-  padding-bottom: 0.75rem;
-  border-bottom: 1px solid #eee;
-}
-
-.detail-row:last-child {
-  border-bottom: none;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  .scanner-container {
-    padding: 0 1rem;
-  }
-  
-  .qr-reader-wrapper {
-    max-width: 100%;
-  }
-  
-  .manual-form {
-    width: 100%;
-  }
-}
-
-/* Agrega esto a tu archivo Escanear.css */
 
 .switch-camera-btn {
   position: absolute;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(255, 255, 255, 0.8);
+  bottom: 15px;
+  right: 15px;
+  background: rgba(43, 145, 231, 0.8);
   border: none;
   border-radius: 50%;
   width: 40px;
@@ -213,19 +69,114 @@ body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  z-index: 10;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  z-index: 2;
+  color: white;
   transition: all 0.3s ease;
 }
 
 .switch-camera-btn:hover {
-  background: rgba(255, 255, 255, 0.9);
+  background: rgba(43, 145, 231, 1);
   transform: scale(1.1);
 }
 
-.qr-reader-wrapper {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+.manual-entry {
+  background-color: #f5f7fa;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.manual-entry-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.manual-entry-header h3 {
+  margin-left: 10px;
+  color: #333;
+}
+
+.input-icon {
+  color: #2b91e7;
+  font-size: 1.2rem;
+}
+
+.manual-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.manual-input {
+  padding: 12px 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 15px;
+  font-size: 1rem;
+  transition: border 0.3s ease;
+}
+
+.manual-input:focus {
+  outline: none;
+  border-color: #2b91e7;
+}
+
+.btn-primary {
+  background-color: #2b91e7;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 4px;
+  font-size: 1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #1a7dcc;
+}
+
+.btn-icon {
+  margin-right: 8px;
+}
+
+.scan-success {
+  text-align: center;
+  padding: 30px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.success-icon {
+  color: #4caf50;
+  margin-bottom: 20px;
+}
+
+.detail-row {
+  margin: 8px 0;
+  text-align: left;
+}
+
+.verification-result {
+  text-align: left;
+  padding: 10px;
+}
+
+@media (max-width: 480px) {
+  .qr-reader-wrapper {
+    height: 250px;
+  }
+  
+  .scan-frame {
+    width: 80%;
+    height: 60%;
+  }
+  
+  .scanner-header h1 {
+    font-size: 1.5rem;
+  }
 }

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import QrScanner from 'react-qr-scanner';
 import Swal from 'sweetalert2';
@@ -9,8 +9,32 @@ function Escaner() {
   const navigate = useNavigate();
   const [scanning, setScanning] = useState(true);
   const [manualCode, setManualCode] = useState('');
-  const [facingMode, setFacingMode] = useState('environment'); // 'environment' (trasera) o 'user' (frontal)
+  const [facingMode, setFacingMode] = useState('environment');
+  const [hasCameraSupport, setHasCameraSupport] = useState(true);
   const qrScannerRef = useRef(null);
+
+  useEffect(() => {
+    const checkCameraSupport = async () => {
+      try {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+          setHasCameraSupport(false);
+          return;
+        }
+
+        const devices = await navigator.mediaDevices.enumerateDevices();
+        const videoDevices = devices.filter(device => device.kind === 'videoinput');
+        
+        if (videoDevices.length < 2) {
+          setHasCameraSupport(false);
+        }
+      } catch (error) {
+        console.error('Error al verificar cámaras:', error);
+        setHasCameraSupport(false);
+      }
+    };
+
+    checkCameraSupport();
+  }, []);
 
   const verificarVisita = async (codigo) => {
     console.log('[DEBUG] Verificando código:', codigo);
@@ -95,11 +119,34 @@ function Escaner() {
     setManualCode('');
   };
 
-  const switchCamera = () => {
-    setFacingMode(facingMode === 'environment' ? 'user' : 'environment');
-    // Forzar reinicio del scanner
-    setScanning(false);
-    setTimeout(() => setScanning(true), 100);
+  const switchCamera = async () => {
+    try {
+      // Detener la cámara actual primero
+      if (qrScannerRef.current) {
+        const videoElement = qrScannerRef.current.video;
+        if (videoElement && videoElement.srcObject) {
+          const stream = videoElement.srcObject;
+          stream.getTracks().forEach(track => track.stop());
+        }
+      }
+
+      // Cambiar a la otra cámara
+      const newFacingMode = facingMode === 'environment' ? 'user' : 'environment';
+      setFacingMode(newFacingMode);
+      
+      // Forzar reinicio del scanner
+      setScanning(false);
+      setTimeout(() => setScanning(true), 100);
+      
+    } catch (error) {
+      console.error('Error al cambiar cámara:', error);
+      Swal.fire({
+        title: 'Error',
+        text: 'No se pudo cambiar la cámara. Intente recargar la página.',
+        icon: 'error',
+        confirmButtonColor: '#2b91e7'
+      });
+    }
   };
 
   return (
@@ -114,27 +161,49 @@ function Escaner() {
           <>
             <div className="qr-reader-container">
               <div className="qr-reader-wrapper">
-                <QrScanner
-                  key={facingMode} // Forzar recreación al cambiar cámara
-                  ref={qrScannerRef}
-                  delay={500}
-                  onError={(err) => console.error('[QR Error]', err)}
-                  onScan={(result) => {
-                    if (result) {
-                      handleScan(result.text || result);
-                    }
-                  }}
-                  style={{ width: '100%' }}
-                  facingMode={facingMode}
-                />
+                {scanning && (
+                  <QrScanner
+                    key={`scanner-${facingMode}`}
+                    ref={qrScannerRef}
+                    delay={500}
+                    onError={(err) => {
+                      console.error('[QR Error]', err);
+                      if (err.name === 'NotAllowedError') {
+                        Swal.fire({
+                          title: 'Permiso denegado',
+                          text: 'Por favor permite el acceso a la cámara',
+                          icon: 'error',
+                          confirmButtonColor: '#2b91e7'
+                        });
+                      }
+                    }}
+                    onScan={(result) => {
+                      if (result) {
+                        handleScan(result.text || result);
+                      }
+                    }}
+                    style={{ width: '100%' }}
+                    facingMode={facingMode}
+                    constraints={{
+                      audio: false,
+                      video: {
+                        facingMode: facingMode,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                      }
+                    }}
+                  />
+                )}
                 <div className="scan-frame"></div>
-                <button 
-                  className="switch-camera-btn"
-                  onClick={switchCamera}
-                  title={`Cambiar a cámara ${facingMode === 'environment' ? 'frontal' : 'trasera'}`}
-                >
-                  <FiRefreshCw size={20} />
-                </button>
+                {hasCameraSupport && (
+                  <button 
+                    className="switch-camera-btn"
+                    onClick={switchCamera}
+                    title={`Cambiar a cámara ${facingMode === 'environment' ? 'frontal' : 'trasera'}`}
+                  >
+                    <FiRefreshCw size={20} />
+                  </button>
+                )}
               </div>
             </div>
 
