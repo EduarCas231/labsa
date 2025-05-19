@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
-import { FaHome, FaList, FaQrcode } from 'react-icons/fa';
+import { FaHome, FaList, FaQrcode, FaBars, FaTimes } from 'react-icons/fa';
 import { GiChemicalDrop, GiEarthAmerica, GiMedal } from 'react-icons/gi';
 import { MdOutlineMiscellaneousServices, MdHistory, MdGroups } from 'react-icons/md';
 import { IoMdSettings, IoMdBusiness } from 'react-icons/io';
@@ -9,7 +9,7 @@ import Escaner from './pages/Escaner';
 import Registro from './pages/Registros';
 import Editar from './pages/Editar';
 import Detalles from './pages/Detalles';
-import './App.css'; // Asegúrate de tener un archivo CSS para los estilos
+import './App.css';
 
 // Componente Logo LABSA con animación mejorada
 const LabsaLogo = () => {
@@ -57,48 +57,82 @@ const LabsaLogo = () => {
   );
 };
 
-// Componente Navbar mejorado con íconos
+// Componente Navbar mejorado con menú hamburguesa responsive
 const Navbar = () => {
   const [activeLink, setActiveLink] = useState('');
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
   useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
+      if (window.innerWidth >= 768) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
     setActiveLink(window.location.pathname);
+    
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <nav className="navbar">
-      <ul className="nav-list">
-        <li className="nav-item">
-          <Link 
-            to="/" 
-            className={`nav-link ${activeLink === '/' ? 'active' : ''}`}
-            onClick={() => setActiveLink('/')}
-          >
-            <FaHome className="nav-icon" />
-            <span>Inicio</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link 
-            to="/Visitas" 
-            className={`nav-link ${activeLink === '/Visitas' ? 'active' : ''}`}
-            onClick={() => setActiveLink('/Visitas')}
-          >
-            <FaList className="nav-icon" />
-            <span>Lista de visitas</span>
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link 
-            to="/Escaner" 
-            className={`nav-link ${activeLink === '/Escaner' ? 'active' : ''}`}
-            onClick={() => setActiveLink('/Escaner')}
-          >
-            <FaQrcode className="nav-icon" />
-            <span>Escaner</span>
-          </Link>
-        </li>
-      </ul>
+      <div className="navbar-container">
+        {isMobile && (
+          <button className="menu-toggle" onClick={toggleMenu}>
+            {isMenuOpen ? <FaTimes /> : <FaBars />}
+            <span>Menú</span>
+          </button>
+        )}
+        
+        <ul className={`nav-list ${isMobile ? (isMenuOpen ? 'active' : '') : ''}`}>
+          <li className="nav-item">
+            <Link 
+              to="/" 
+              className={`nav-link ${activeLink === '/' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveLink('/');
+                if (isMobile) setIsMenuOpen(false);
+              }}
+            >
+              <FaHome className="nav-icon" />
+              <span>Inicio</span>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link 
+              to="/Visitas" 
+              className={`nav-link ${activeLink === '/Visitas' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveLink('/Visitas');
+                if (isMobile) setIsMenuOpen(false);
+              }}
+            >
+              <FaList className="nav-icon" />
+              <span>Lista de visitas</span>
+            </Link>
+          </li>
+          <li className="nav-item">
+            <Link 
+              to="/Escaner" 
+              className={`nav-link ${activeLink === '/Escaner' ? 'active' : ''}`}
+              onClick={() => {
+                setActiveLink('/Escaner');
+                if (isMobile) setIsMenuOpen(false);
+              }}
+            >
+              <FaQrcode className="nav-icon" />
+              <span>Escaner</span>
+            </Link>
+          </li>
+        </ul>
+      </div>
     </nav>
   );
 };

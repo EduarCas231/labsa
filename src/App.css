@@ -78,13 +78,40 @@ body {
   z-index: 100;
 }
 
+.navbar-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.menu-toggle {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 8px 12px;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  z-index: 101;
+}
+
+.menu-toggle:hover {
+  background-color: #4785c4;
+}
+
 .nav-list {
   display: flex;
-  justify-content: center;
   list-style: none;
   padding: 0;
   margin: 0;
-  flex-wrap: wrap;
+  transition: all 0.3s ease;
 }
 
 .nav-item {
@@ -518,21 +545,55 @@ body {
     font-size: 1rem;
   }
   
+  /* Navbar responsive */
   .nav-list {
+    position: fixed;
+    top: 70px;
+    left: 0;
+    width: 100%;
+    background-color: #1e4b87;
     flex-direction: column;
     align-items: center;
+    padding: 20px 0;
+    transform: translateY(-150%);
+    opacity: 0;
+    z-index: 99;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+  }
+  
+  .nav-list.active {
+    transform: translateY(0);
+    opacity: 1;
   }
   
   .nav-item {
-    margin: 5px 0;
     width: 100%;
     text-align: center;
+    margin: 5px 0;
   }
   
   .nav-link {
     justify-content: center;
+    padding: 15px;
+    width: 100%;
   }
   
+  /* Logo responsive */
+  .labsa-logo-container {
+    width: 250px;
+    height: 180px;
+  }
+  
+  .labsa-logo-symbol {
+    width: 200px;
+    height: 130px;
+  }
+  
+  .labsa-text {
+    font-size: 36px;
+  }
+  
+  /* Timeline responsive */
   .timeline-container::before {
     left: 20px;
   }
@@ -558,6 +619,7 @@ body {
     display: none;
   }
   
+  /* Values grid responsive */
   .values-grid {
     grid-template-columns: 1fr;
   }
@@ -573,17 +635,17 @@ body {
 
 @media (max-width: 576px) {
   .labsa-logo-container {
-    width: 250px;
-    height: 180px;
+    width: 220px;
+    height: 160px;
   }
   
   .labsa-logo-symbol {
-    width: 200px;
-    height: 130px;
+    width: 180px;
+    height: 110px;
   }
   
   .labsa-text {
-    font-size: 36px;
+    font-size: 32px;
   }
   
   .main-title {
@@ -618,25 +680,25 @@ body {
 
 @media (max-width: 400px) {
   .labsa-logo-container {
-    width: 220px;
-    height: 160px;
+    width: 200px;
+    height: 140px;
   }
   
   .labsa-logo-symbol {
-    width: 180px;
-    height: 110px;
+    width: 160px;
+    height: 100px;
   }
   
   .labsa-text {
-    font-size: 32px;
+    font-size: 28px;
   }
   
   .main-title {
     font-size: 1.2rem;
   }
   
-  .nav-link {
-    padding: 10px;
-    font-size: 1rem;
+  .menu-toggle {
+    padding: 6px 10px;
+    font-size: 0.9rem;
   }
 }
