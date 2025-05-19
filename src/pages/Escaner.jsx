@@ -1,14 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import QrScanner from 'react-qr-scanner';
 import Swal from 'sweetalert2';
-import { FiCamera, FiCheckCircle, FiKey } from 'react-icons/fi';
+import { FiCamera, FiCheckCircle, FiKey, FiRefreshCw } from 'react-icons/fi';
 import './Escanear.css';
 
 function Escaner() {
   const navigate = useNavigate();
   const [scanning, setScanning] = useState(true);
   const [manualCode, setManualCode] = useState('');
+  const [facingMode, setFacingMode] = useState('environment'); // 'environment' (trasera) o 'user' (frontal)
+  const qrScannerRef = useRef(null);
 
   const verificarVisita = async (codigo) => {
     console.log('[DEBUG] Verificando código:', codigo);
@@ -93,6 +95,13 @@ function Escaner() {
     setManualCode('');
   };
 
+  const switchCamera = () => {
+    setFacingMode(facingMode === 'environment' ? 'user' : 'environment');
+    // Forzar reinicio del scanner
+    setScanning(false);
+    setTimeout(() => setScanning(true), 100);
+  };
+
   return (
     <div className="scanner-container">
       <div className="scanner-header">
@@ -106,6 +115,8 @@ function Escaner() {
             <div className="qr-reader-container">
               <div className="qr-reader-wrapper">
                 <QrScanner
+                  key={facingMode} // Forzar recreación al cambiar cámara
+                  ref={qrScannerRef}
                   delay={500}
                   onError={(err) => console.error('[QR Error]', err)}
                   onScan={(result) => {
@@ -114,8 +125,16 @@ function Escaner() {
                     }
                   }}
                   style={{ width: '100%' }}
+                  facingMode={facingMode}
                 />
                 <div className="scan-frame"></div>
+                <button 
+                  className="switch-camera-btn"
+                  onClick={switchCamera}
+                  title={`Cambiar a cámara ${facingMode === 'environment' ? 'frontal' : 'trasera'}`}
+                >
+                  <FiRefreshCw size={20} />
+                </button>
               </div>
             </div>
 
